@@ -7,7 +7,7 @@ function getNextMove(currentMove, playersCount) {
   return slicedMoverOrder[nextMoveIndex] ?? slicedMoverOrder[0];
 }
 
-export function UseGameState(playersCount) {
+export function useGameState(playersCount) {
   const [{ cells, currentMove }, setGameState] = useState(() => ({
     cells: new Array(19 * 19).fill(null),
     currentMove: GAME_SYMBOLS.CROSS,
