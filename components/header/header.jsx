@@ -13,10 +13,7 @@ export function Header() {
         Играть
       </UiButton>
       <button className="ml-auto flex items-center gap-2 text-teal-600">
-        <Profile 
-          name={'Paromovevg'}
-          rating={1230}
-         />
+        <Profile name={"Paromovevg"} rating={1230} />
         <ArrowDownIcon />
       </button>
     </header>

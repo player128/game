@@ -2,7 +2,7 @@ import Image from "next/image";
 import avatarSrc from "./avatar.png";
 import clsx from "clsx";
 
-export function Profile({ className, name, rating, avatar= avatarSrc }) {
+export function Profile({ className, name, rating, avatar = avatarSrc }) {
   return (
     <div
       className={clsx(
