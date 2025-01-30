@@ -8,7 +8,7 @@ import { GameTitle } from "./ui/game-title";
 import { PlayerInfo } from "./ui/player-info";
 import { GameOverModal } from "./ui/game-over-modal";
 import { GAME_STATE_ACTIONS, gameStateReducer, initGameState } from "./model/game-state-reducer";
-import { useEffect, useReducer } from "react";
+import { useCallback, useEffect, useMemo, useReducer } from "react";
 import { computeWinner } from "./model/compute-winner";
 import { getNextMove } from "./model/get-next-move";
 import { computeWinnerSymbol } from "./model/compute-winner-symbol";
@@ -23,18 +23,30 @@ export function Game() {
         {playersCount : PLAYERS_COUNT, defaultTimer : 10000, currentMoveStart : Date.now()
      }, initGameState);
 
-    useInteral(1000, gameState.currentMoveStart, () => {
+    console.log("render")
+
+    useInteral(1000, !!gameState.currentMoveStart, useCallback(() => {
         dispatch({
             type : GAME_STATE_ACTIONS.TICK,
             now : Date.now(), 
         });    
-    });
+    },[]));
 
-    const winnerSequence = computeWinner(gameState);
+    const winnerSequence = useMemo(() => {
+        computeWinner(gameState)
+    }, [gameState]);
+
     const nextMove = getNextMove(gameState);
     const winnerSymbol = computeWinnerSymbol(gameState, {winnerSequence, nextMove});
-
     const winnerPlayer = PLAYERS.find(player => player.symbol === winnerSymbol);
+
+    const handleCellClikc = useCallback((index) => {
+        dispatch({
+            type : GAME_STATE_ACTIONS.CELL_CLICK,
+            index,
+            now : Date.now(),
+        });
+    },[]);
 
     return (
         <>
@@ -68,13 +80,8 @@ export function Game() {
                 gameCells={gameState.cells.map((cell, index) => <GameCell
                     key={index}
                     disabled={!!winnerSymbol}
-                    onClick={() => {
-                        dispatch({
-                            type : GAME_STATE_ACTIONS.CELL_CLICK,
-                            index,
-                            now : Date.now(),
-                        });
-                    }}
+                    index={index}
+                    onClick={handleCellClikc}
                     isWinner={winnerSequence?.includes(index)}
                     symbol={cell}
                 />)}
